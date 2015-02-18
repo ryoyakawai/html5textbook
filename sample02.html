@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html, body, #map-canvas { height: 90%; margin: 0; padding: 0;}
+    </style>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+    <button id="marker-on">marker-on</button>
+    <button id="marker-off">marker-off</button>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQaqJrYHpxV2qo600yGU-3NUmqY1VlOp8"></script>
+    <!-- [Map Types] https://developers.google.com/maps/documentation/javascript/maptypes -->
+    <script type="text/javascript">
+    var myLatLng=new google.maps.LatLng( 35.665472, 139.762289 ); // Latitude, Longtitude;
+    var map, markers=[], infowindow=[];
+    function initialize() {
+        var mapOptions = {
+            center: myLatLng,
+            zoom: 18,
+            mapTypeId: 'satellite'
+        };
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        map.setTilt(45);
+        //map.setHeading(90);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+    <!-- [Drawing on the Map: Markers] https://developers.google.com/maps/documentation/javascript/markers -->
+    <script>
+    var markers = [
+        { "no":0, "disp":false, "lat":35.665472, "lng":139.762289, "name":"AAA", "title":"hello world 0", "description":"0 lorem ipsumlorem ipsumlorem ipsumlorem ipsum", "mObj": null, "infowondow": null },
+        { "no":1, "disp":false, "lat":35.665572, "lng":139.762189, "name":"BBB", "title":"hello world 1", "description":"1 lorem ipsumlorem ipsumlorem ipsumlorem ipsum", "mObj": null, "infowondow": null },
+        { "no":2, "disp":false, "lat":35.665372, "lng":139.762389, "name":"CCC", "title":"hello world 2", "description":"2 lorem ipsumlorem ipsumlorem ipsumlorem ipsum", "mObj": null, "infowondow": null }
+    ];
+    for(var i=0; i<markers.length; i++) {
+        markers[i].mObj=createMarkerObj(markers[i]);
+        markers[i].infowindow=new google.maps.InfoWindow({
+            content: markers[i].description
+        });
+        google.maps.event.addListener(markers[i].mObj, 'click', function(event){
+            for(var j=0; j<markers.length; j++) {
+                if(stdNum(markers[j].lng, 6)==stdNum(event.latLng.D, 6) 
+                   && stdNum(markers[j].lat, 6)==stdNum(event.latLng.k, 6)) {
+                    markers[j].infowindow.open(map, markers[j].mObj);
+                    break;
+                }
+            }
+            function stdNum(val, num) {
+                return parseInt(val*Math.pow(10, num));
+            }
+        });
+    }
+    function createMarkerObj(val) {
+        return new google.maps.Marker({
+            position: new google.maps.LatLng( val.lat, val.lng ), // Latitude, Longtitude;,
+            animation: google.maps.Animation.DROP,
+            title: val.title
+        });
+    }
+
+    function setMarker(name, type) {
+        var type_b=false;
+        if(type=="add") type_b=true;
+        for(var i=0; i<markers.length; i++) {
+            if(markers[i].name==name) {
+                markers[i].disp=type_b;
+                break;
+            }
+        }
+        clearAllMarkers();
+        putAllMarkers();
+    }
+    function putAllMarkers() {
+        for(var i=0; i<markers.length; i++) {
+            if(typeof markers[i].mObj!="underined"
+               && markers[i].disp==true) {
+                markers[i].mObj.setMap(map);
+            }
+        }
+    }
+    function clearAllMarkers() {
+        for(var i=0; i<markers.length; i++) {
+            markers[i].mObj.setMap(null);
+        }
+    }
+
+    document.getElementById("marker-on").addEventListener("mousedown", function(event){
+        setMarker("BBB", "add");
+    });
+    document.getElementById("marker-off").addEventListener("mousedown", function(event){
+        setMarker("BBB", "remove");
+    });
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,3 @@
+{ "no":0, "disp":false, "lat":35.665472, "lng":139.762289, "name":"AAA", "title":"hello world 0", "description":"0 lorem ipsumlorem ipsumlorem ipsumlorem ipsum", "mObj": null, "infowondow": null },
+{ "no":1, "disp":false, "lat":35.665572, "lng":139.762189, "name":"BBB", "title":"hello world 1", "description":"1 lorem ipsumlorem ipsumlorem ipsumlorem ipsum", "mObj": null, "infowondow": null },
+{ "no":2, "disp":false, "lat":35.665372, "lng":139.762389, "name":"CCC", "title":"hello world 2", "description":"2 lorem ipsumlorem ipsumlorem ipsumlorem ipsum", "mObj": null, "infowondow": null }

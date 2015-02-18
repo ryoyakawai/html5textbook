@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html, body, #map-canvas { height: 90%; margin: 0; padding: 0;}
+    </style>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+    <button id="marker-on">marker-on</button>
+    <button id="marker-off">marker-off</button>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQaqJrYHpxV2qo600yGU-3NUmqY1VlOp8"></script>
+    <!-- [Map Types] https://developers.google.com/maps/documentation/javascript/maptypes -->
+    <script type="text/javascript">
+    var myLatLng=new google.maps.LatLng( 35.665472, 139.762289 ); // Latitude, Longtitude;
+    var map, markers=[];
+    function initialize() {
+        var mapOptions = {
+            center: myLatLng,
+            zoom: 18,
+            mapTypeId: 'satellite'
+        };
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        map.setTilt(45);
+        //map.setHeading(90);
+
+        var ttt=[];
+        var a=new google.maps.Marker({
+            position: new google.maps.LatLng( 35.665472, 139.762289 ), // Latitude, Longtitude;,
+            title: "TEST"
+        });
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+    <!-- [Drawing on the Map: Markers] https://developers.google.com/maps/documentation/javascript/markers -->
+    <script>
+    document.getElementById("marker-on").addEventListener("mousedown", function(event){
+        setMarker("on", 35.665472, 139.762289, "hello world");
+        setMarker("on", 35.665572, 139.762389, "hello world2");
+    });
+    document.getElementById("marker-off").addEventListener("mousedown", function(event){
+        setMarker("off", 35.665472, 139.762289, "hello world");
+    });
+    function setMarker(type, lat, lng, title) {
+        clearAllMarkers();
+
+        markerObj={"lat":lat, "lng":lng, "title":title};
+        switch(type) {
+            case "on":
+                markers.push(markerObj);
+                putAllMarkers();
+                break;
+            case "off":
+                deleteMarker(markerObj);
+                putAllMarkers();
+                break;
+        }
+        
+    }
+    function clearAllMarkers() {
+        for(var i=0; i<markers.length; i++) {
+            markers[i].mObj.setMap(null);
+        }
+    }
+    function deleteMarker(Latlng) {
+        for(var i=0; i<markers.length; i++) {
+            if(markerObj.lat==markers[i].lat 
+               && markerObj.lng==markers[i].lng
+               && markerObj.title==markers[i].title
+               ) {
+                markers[i].mObj.setMap(null);
+                markers.splice(i, 1);
+            };
+        }
+    }
+    function putAllMarkers() {
+        for(var i=0; i<markers.length; i++) {
+            if(typeof markers[i].mObj!="underined") {
+                var mObj=createMarkerObj(markers[i]);
+                markers[i].mObj=mObj;
+            }
+            markers[i].mObj.setMap(map);
+        }
+        function createMarkerObj(val) {
+            return new google.maps.Marker({
+                position: new google.maps.LatLng( val.lat, val.lng ), // Latitude, Longtitude;,
+                title: val.title
+            });
+        }
+    }
+    </script>
+
+  </body>
+</html>

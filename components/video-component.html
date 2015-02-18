@@ -1,0 +1,72 @@
+<!--
+Copyright 2015 Ryoya Kawai. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<polymer-element name="video-component" attributes="videoelemname videocanvasname width height">
+  <template>
+    <video id="video-elem" autoplay width="640" height="480" style="display:none;"></video>
+  </template>
+  <script type="text/javascript">
+  Polymer({
+      localStream: null,
+      videoCanvas: null,
+      canvs:null,
+      videoElem: null,
+      timerId:null,
+      ready: function() {
+          if(typeof this.width=="undefined") this.width="320";
+          if(typeof this.height=="undefined") this.width="240";
+
+          navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+          this.videoElem=this.$["video-elem"];
+      },
+      videoStart: function(videocanvasname) {
+          navigator.getUserMedia({ video:true, audio:false}, successCallback.bind(this), errorCallback.bind(this));
+          this.videoCanvas=document.getElementById(videocanvasname);
+          this.videoCanvas.width=this.width;
+          this.videoCanvas.height=this.height;
+          function successCallback(stream){
+              this.localStream=stream;
+              this.videoElem.src = window.URL.createObjectURL(stream);
+              this.canvas=this.videoCanvas.getContext("2d");
+
+              // flip
+              this.canvas.translate( this.width, 0 );
+              this.canvas.scale( -1, 1 );
+              this._animationLoop.bind(this)();
+          }
+          function errorCallback(e) {
+              console.log(e);
+          }
+      },
+      _animationLoop: function() {
+          this.timerId=requestAnimationFrame(this._animationLoop.bind(this));
+          if(this.videoElem.readyState === this.videoElem.HAVE_ENOUGH_DATA) {
+            this.canvas.drawImage( this.videoElem, 0, 0, this.width, this.height );
+          }
+      },
+      videoStop: function(videocanvasname) {
+          cancelAnimationFrame(this.timerId);
+          this.localStream.stop();
+      },
+      captureImage: function(id) {
+          var imgUrl=this.videoCanvas.toDataURL('image/webp');
+          this.videoCanvas.parentNode.innerHTML="<img class=\"video-canvas\" src="+imgUrl+">";
+          this.videoStop();
+          return {"id":id, "img":imgUrl};
+      }
+
+  });
+  </script>
+</polymer-element>
