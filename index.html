@@ -9,6 +9,7 @@
     <script type="text/javascript" src="./bower_components/polymer/polymer.js"></script>
     <link rel="import" href="./components/map-component.html">
     <link rel="import" href="./components/video-component.html">
+    <link rel="import" href="./components/voicerecog-component.html">
 
 
     <div id="map-canvas"></div>
@@ -36,8 +37,13 @@
       <button id="video-start">video start</button>
     </div>
     <div></div>
-    <div><canvas id="video-canvas" class="video-canvs"></canvas></div>
+    <div><canvas id="video-canvas" class="video-canvs" style="display:none;"></canvas></div>
 
+    <div>
+      <button id="recognition-start">voice recognition start</button>
+      <button id="recognition-stop">voice recognition stop</button>
+      <div id="recog-result" style="width:300px; height:100px; border:solid 1px #000; border-radius:10px;margin:5px; padding:5px;"></div>
+    </div>
 
 
     <div id="rec-fab" class="rec-fab">Capture</div>
@@ -45,6 +51,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQaqJrYHpxV2qo600yGU-3NUmqY1VlOp8"></script>
     <map-component id="googlemap-comp" mapcanvasname="map-canvas"></map-component>
     <video-component id="video-comp" width="160" height="120" videocanvasname="video-canvas"></video-component>
+    <voicerecog-component id="voicerecog-comp"></voicerecog-component>
 
     <script src="./js/app.js"></script>
 

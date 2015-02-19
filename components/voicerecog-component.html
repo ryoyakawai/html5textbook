@@ -1,0 +1,105 @@
+<!--
+Copyright 2015 Ryoya Kawai. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<polymer-element name="voicerecog-component" attributes="">
+  <template></template>
+  <script type="text/javascript">
+  Polymer({
+      recognition: null,
+      isRecognition: false,
+      language: "ja-JP", // en-US or ja-JP
+      supported: false,
+      maxAlternatives: 10,
+      ready: function() {
+          var SpeechRecognition = window.SpeechRecognition ||
+                                    window.webkitSpeechRecognition ||
+                                    window.mozSpeechRecognition ||
+                                    window.msSpeechRecognition ||
+                                    window.oSpeechRecognition;
+
+          this.recognition=new SpeechRecognition();
+          if (SpeechRecognition !== undefined) {
+              this.recognition = new SpeechRecognition();
+              this.supported=true;
+          }
+      },
+      start: function(resultelement) {
+          this.result=document.getElementById(resultelement);
+          this.result.innerHTML="";
+          if(this.supported==false) {
+              this.result
+              console.log("Your browser does not support the Web Speech API");
+              return;
+          }
+          this.recognition.maxAlternatives=this.maxAlternatives;
+          this.recognition.interimResults=true;
+          this.recognition.continuous=false;
+          this.recognition.onresult = function (e) {
+              if (e.results.length > 0) {
+                  var value = e.results[0][0].transcript;
+                  this.result.innerHTML+=value;
+              }
+          }.bind(this);
+          this.recognition.lang=this.language;
+          this.recognition.start();
+          this.isRecognition = true;      
+      },
+      startContinuous: function(resultelement){
+          this.result=document.getElementById(resultelement);
+          this.result.innerHTML="";
+          if(this.supported==false) {
+              this.result
+              console.log("Your browser does not support the Web Speech API");
+              return;
+          }
+          this.recognition.maxAlternatives=this.maxAlternatives;
+          this.recognition.interimResults=true;
+          this.recognition.continuous=true;
+
+          var self=this;
+          this.recognition.onresult = function (event) {
+              console.log(event.results);
+              for (var i = event.resultIndex; i<event.results.length; i++){
+                  if(event.results[i].isFinal===true){
+                      var elem=document.getElementById("recog-interim");
+                      elem.parentNode.removeChild(elem);
+                      self.result.innerHTML+=event.results[i][0].transcript;
+                  } else{
+                      var out=null;
+                      var elem=document.getElementById("recog-interim");
+                      if(elem===null) {
+                          out="<span id=\"recog-interim\" class=\"recog-interim\">"+event.results[i][0].transcript+"</span>";
+                          self.result.innerHTML+=out;
+                      } else {
+                          elem.innerHTML=event.results[i][0].transcript;
+                      }
+                  }
+              }
+          };
+          this.recognition.lang=this.language;
+          this.recognition.start();
+          this.isRecognition=true;
+      },
+      stop: function() {
+          if(this.isRecognition==true) {
+              this.recognition.stop();
+              this.isRecognition=false;
+          } else {
+              console.log("Recognition is NOT starting");
+          }
+      }
+  });
+  </script>
+</polymer-element>

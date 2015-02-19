@@ -1,4 +1,7 @@
-html, body, #map-canvas { height: 90%; margin: 0; padding: 0;}
+html, body, #map-canvas {
+  height: 90%; margin: 0; padding: 0;
+  font-family:arial;
+}
 .rec-fab {
   position:absolute;
   top:100px; right:30px;
@@ -23,4 +26,7 @@ html, body, #map-canvas { height: 90%; margin: 0; padding: 0;}
   margin:0px auto; text-align:center; 
   padding:0px; width:160px; height:120px; 
   background-color:#dddddd; border-radius:10px;
+}
+.recog-interim { 
+  color:rgba(100, 100, 100, 0.8);
 }
