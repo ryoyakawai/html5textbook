@@ -1,5 +1,6 @@
 var gmcomp;
 var videocomp;
+var voicerecogcomp;
 window.addEventListener('polymer-ready', function(e) {
 
     // for map
@@ -71,7 +72,17 @@ window.addEventListener('polymer-ready', function(e) {
         videocomp.videoStop();
     });
 
+    // for recognition
+    voicerecogcomp=document.getElementById("voicerecog-comp");
+    document.getElementById("recognition-start").addEventListener('mousedown', function(e) {
+        voicerecogcomp.startContinuous("recog-result");
+    });
+    document.getElementById("recognition-stop").addEventListener('mousedown', function(e) {
+        voicerecogcomp.stop();
+    });    
 
+
+    
     // initialize
     window.addEventListener('markers-ready', function(e) {
         gmcomp.updateMarker("all", "add");
