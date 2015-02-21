@@ -32,12 +32,12 @@ limitations under the License.
       ],
 */
       ready: function() {
-          this.myLatLng=new google.maps.LatLng( 35.705177, 139.768425 ); // Latitude, Longtitude;
+          this.myLatLng=new google.maps.LatLng( 35.707055, 139.78194 ); // Latitude, Longtitude;
           this.mapCanvas=document.getElementById(this.mapcanvasname);
 
           var mapOptions = {
               center: this.myLatLng,
-              zoom: 16,
+              zoom: 14,
               //mapTypeId: 'satellite'
           };
           this.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
@@ -194,7 +194,11 @@ limitations under the License.
       putPositionByData: function(lat, lng) {
           var mObj=this._createMarkerObj({"lat": lat, "lng": lng}, true);
           mObj.setMap(this.map);
+      },
+      panTo: function(lat, lng) {
+          google.maps.panTo(new google.maps.LatLng(35.666397,139.758153));
       }
+      
   });
   </script>
 </polymer-element>

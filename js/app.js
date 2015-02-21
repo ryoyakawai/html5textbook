@@ -74,7 +74,7 @@ window.addEventListener('polymer-ready', function(e) {
         mission2.toggle();
     });
     mission2.addEventListener("core-overlay-close-completed", function(event){
-        gmcomp.updateMarker("one", "湯島天神");
+        gmcomp.updateMarker("one", "神田明神");
     });
     document.addEventListener('close-infowindow', function(e) {
         document.getElementById("rec-fab").className=document.getElementById("rec-fab").className.replace("disp-rec-fab", "");
@@ -84,6 +84,8 @@ window.addEventListener('polymer-ready', function(e) {
         // // // //
         var id=e.detail.id;
         if(id==0) {
+            gmcomp.updateMarker("one", "湯島天神");
+        } else if(id==1) {
             gmcomp.updateMarker("one", "秋葉神社");
         } else if(id==1) {
             gmcomp.updateMarker("one", "柳森神社");
