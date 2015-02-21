@@ -1,0 +1,200 @@
+<!--
+Copyright 2015 Ryoya Kawai. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<polymer-element name="map-component" attributes="mapcamvasname">
+  <template></template>
+  <!-- [Map Types] https://developers.google.com/maps/documentation/javascript/maptypes -->
+  <script type="text/javascript">
+  Polymer({
+      myLatLng: null,
+      map: null,
+      mapCanvas: null,
+      markers: [], 
+      infowindow: [],
+/*
+      // dummy data
+      markers: [
+          { "no":0, "disp":false, "lat":35.665472, "lng":139.762289, "name":"AAA", "title":"hello world 0", "description":"0 lorem ipsumlorem ipsumlorem ipsumlorem ipsum", "mObj": null, "infowondow": null },
+          { "no":1, "disp":false, "lat":35.665572, "lng":139.762189, "name":"BBB", "title":"hello world 1", "description":"1 lorem ipsumlorem ipsumlorem ipsumlorem ipsum", "mObj": null, "infowondow": null },
+          { "no":2, "disp":false, "lat":35.665372, "lng":139.762389, "name":"CCC", "title":"hello world 2", "description":"2 lorem ipsumlorem ipsumlorem ipsumlorem ipsum", "mObj": null, "infowondow": null }
+      ],
+*/
+      ready: function() {
+          this.myLatLng=new google.maps.LatLng( 35.665472, 139.766289 ); // Latitude, Longtitude;
+          this.mapCanvas=document.getElementById(this.mapcanvasname);
+
+          var mapOptions = {
+              center: this.myLatLng,
+              zoom: 16,
+              //mapTypeId: 'satellite'
+          };
+          this.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+          this.map.setTilt(45);
+          //map.setHeading(90);
+          google.maps.event.addDomListener(window, 'load', function(){});
+
+          this.getConfigMarkers();
+      },
+      getConfigMarkers: function() {
+          var self=this;
+          path="./data/markers2.json";
+          loadMarkerByJson(path);
+          function loadMarkerByJson(path) {
+              var xhr=new XMLHttpRequest();
+              xhr.open("GET", path, true);
+              xhr.onreadystatechange = function(){
+                  if (xhr.readyState === 4 && xhr.status === 200){
+                      self.markers= JSON.parse(xhr.responseText);
+                      setupMarkers.bind(self)();
+                      setTimeout(function(){self.fire("markers-ready");}, 1300);
+                  }
+              }
+              xhr.send();
+
+          }
+
+          function setupMarkers() {
+              var display_width = screen.width;
+              for(var i=0; i<this.markers.length; i++) {
+                  this.markers[i].mObj=this._createMarkerObj(this.markers[i]);
+                  alert(display_width);
+                  this.markers[i].infowindow=new google.maps.InfoWindow({
+                      content: this.markers[i].description,
+                      maxWidth: display_width
+                  });
+                  this._addInfoWindowEvent.bind(this)(i);
+              }
+              this.updateMarker("all", "add");
+          }
+      },
+      _addInfoWindowEvent: function(i) {
+          console.log(i);
+          google.maps.event.addListener(this.markers[i].mObj, 'click', function(event){
+              for(var j=0; j<this.markers.length; j++) {
+                  if(stdNum(this.markers[j].lng, 5)==stdNum(event.latLng.D, 5)
+                          && stdNum(this.markers[j].lat, 5)==stdNum(event.latLng.k, 5)) {
+                      var t_content=this.markers[j].description;
+                      var display_width = screen.width;
+                      var imgExists=false;
+                      img="<div style=\"text-align:center;padding:5px;\"><img class=\"video-canvas\" width=\""+display_width+"\" src=\""+ this.markers[j].img + "\"></div>";
+                      imgExists=true;
+                      this.map.panTo(new google.maps.LatLng(this.markers[j].lat,this.markers[j].lng));
+//                      this.updateMarker("all", "add");
+                      this.markers[j].infowindow=new google.maps.InfoWindow({
+                          content: img + t_content,
+                          maxWidth: display_width
+                      });
+                      this.markers[j].infowindow.open(this.map, this.markers[j].mObj);
+                      this.fire("open-infowindow", {"imgExists":imgExists, "cid":j});
+                      google.maps.event.addListener(this.markers[j].infowindow,'closeclick',function(){
+                          this.fire("close-infowindow");
+                      }.bind(this));
+
+                      break;
+                  }
+              }
+              function stdNum(val, num) {
+                  return parseInt(val*Math.pow(10, num));
+              }
+          }.bind(this));
+      },
+      _createMarkerObj: function (val, icon) {
+          var out;
+          if(icon!==true) {
+              out=new google.maps.Marker({
+                  position: new google.maps.LatLng( val.lat, val.lng ), // Latitude, Longtitude;,
+                  animation: google.maps.Animation.DROP,
+                  title: val.title
+              });
+          } else {
+              out=new google.maps.Marker({
+                  position: new google.maps.LatLng( val.lat, val.lng ), // Latitude, Longtitude;,
+                  animation: google.maps.Animation.j,
+                  icon: {
+                      path: google.maps.SymbolPath.CIRCLE,
+                      scale: 7
+                  },
+                  title: val.title
+              });
+          }
+          return out;
+      },
+      updateMarker: function (type, name) {
+          type=type.toLocaleLowerCase();
+          var type_b;
+          this.clearAllMarkers();
+          switch(type) {
+              case "add":
+              case "remove":
+                  type_b=false;
+                  if(type=="add") type_b=true;
+                  for(var i=0; i<this.markers.length; i++) {
+                      if(this.markers[i].name==name) {
+                          this.markers[i].disp=type_b;
+                          if(type_b===true) {
+                              this.markers[i].mObj=this._createMarkerObj(this.markers[i]);
+                              this._addInfoWindowEvent.bind(this)(i);
+                          }
+                          break;
+                      }
+                  }
+                  break;
+              case "all":
+                  if(name=="remove") type_b=false
+                  if(name=="add") type_b=true;
+                  for(var i=0; i<this.markers.length; i++) {
+                      this.markers[i].disp=type_b;
+                      if(type_b===true) {
+                          this.markers[i].mObj=this._createMarkerObj(this.markers[i]);
+                          this._addInfoWindowEvent.bind(this)(i);
+                      }
+                  }
+                  break;
+              case "one":
+                  for(var i=0; i<this.markers.length; i++) {
+                      this.markers[i].disp=false;
+                      if(this.markers[i].name==name) {
+                          this.markers[i].disp=true;
+                          this.markers[i].mObj=this._createMarkerObj(this.markers[i]);
+                          this._addInfoWindowEvent.bind(this)(i);
+                      }
+                  }
+                  break;
+          }
+          this.putAllMarkers();
+      },
+      putAllMarkers: function() {
+          for(var i=0; i<this.markers.length; i++) {
+              if(typeof this.markers[i].mObj!="underined"
+                 && this.markers[i].disp==true) {
+                  this.markers[i].mObj.setMap(this.map);
+              }
+          }
+      },
+      clearAllMarkers: function() {
+          for(var i=0; i<this.markers.length; i++) {
+              this.markers[i].mObj.setMap(null);
+          }
+      },
+      storeImg2Data: function(id, img) {
+          this.markers[id].img=img;
+      },
+      putPositionByData: function(lat, lng) {
+          var mObj=this._createMarkerObj({"lat": lat, "lng": lng}, true);
+          mObj.setMap(this.map);
+      }
+  });
+  </script>
+</polymer-element>
