@@ -32,7 +32,7 @@ limitations under the License.
       ],
 */
       ready: function() {
-          this.myLatLng=new google.maps.LatLng( 35.665472, 139.766289 ); // Latitude, Longtitude;
+          this.myLatLng=new google.maps.LatLng( 35.705177, 139.768425 ); // Latitude, Longtitude;
           this.mapCanvas=document.getElementById(this.mapcanvasname);
 
           var mapOptions = {
@@ -82,13 +82,14 @@ limitations under the License.
                      && stdNum(this.markers[j].lat, 5)==stdNum(event.latLng.k, 5)) {
                       var t_content=this.markers[j].description;
                       var imgExists=false;
-                      var img="<div style=\"marign:10px;\"><div class=\"no-video\"><canvas id=\"userimage\" class=\"video-canvas\"></canvas></div></div>"
+                      var img="<br><br><button id=\"video-start-"+j+"\" cid=\""+j+"\">Take Picture</button><br><div style=\"marign:10px;\"><div class=\"no-video\" cid=\""+j+"\"><canvas id=\"userimage-"+j+"\" class=\"video-canvas\" cid=\""+j+"\"></canvas></div></div>"
                       if(this.markers[j].img!=null) {
-                          img="<div style=\"text-align:center;padding:5px;\"><img class=\"video-canvas\" src=\""+ this.markers[j].img + "\"></div>";
+                          img="<br><div style=\"text-align:center;padding:5px;\"><img class=\"video-canvas\" src=\""+ this.markers[j].img + "\"></div>";
                           imgExists=true;
                       }
+                      var divtext="<br><button id=\"speech-start-"+j+"\">Rec Comment</button><div id=\"speech-comment-"+j+"\"></div>";
                       this.markers[j].infowindow=new google.maps.InfoWindow({
-                          content: t_content + img
+                          content: t_content + img + divtext
                       });
                       this.markers[j].infowindow.open(this.map, this.markers[j].mObj);
                       this.fire("open-infowindow", {"imgExists":imgExists, "cid":j});
@@ -183,7 +184,8 @@ limitations under the License.
               this.markers[i].mObj.setMap(null);
           }
       },
-      storeImg2Data: function(id, img) {
+      storeImg2Data: function(id, img, test) {
+          console.log(id,img,test);
           this.markers[id].img=img;
       },
       putPositionByData: function(lat, lng) {
