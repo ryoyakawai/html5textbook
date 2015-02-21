@@ -22,7 +22,6 @@ window.addEventListener('polymer-ready', function(e) {
             document.getElementById("video-start-"+e.detail.cid).addEventListener("mousedown", function(event){
                 var t=event.target.id.split("-");
                 var cid=t[t.length-1];
-                console.log(videocomp);
                 videocomp.videoStart("userimage-"+cid);
                 document.getElementById("userimage-"+e.detail.cid).addEventListener("mousedown", function(event){
                     var videoImage=videocomp.captureImage(cid);
@@ -34,7 +33,8 @@ window.addEventListener('polymer-ready', function(e) {
             if(voicerecogcomp.getStatus()==false) {
                 voicerecogcomp.start("speech-comment-"+this.detail.cid);
             } else {
-                voicerecogcomp.stop();
+                var comment=voicerecogcomp.stop("speech-comment-"+this.detail.cid);
+                gmcomp.storeComment2Data(this.detail.id, comment);  
             }
         }.bind(e));
     });

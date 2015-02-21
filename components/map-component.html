@@ -184,9 +184,11 @@ limitations under the License.
               this.markers[i].mObj.setMap(null);
           }
       },
-      storeImg2Data: function(id, img, test) {
-          console.log(id,img,test);
+      storeImg2Data: function(id, img) {
           this.markers[id].img=img;
+      },
+      storeComment2Data: function(id, comment) {
+          this.markers[id].comment=comment;
       },
       putPositionByData: function(lat, lng) {
           var mObj=this._createMarkerObj({"lat": lat, "lng": lng}, true);
