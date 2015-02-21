@@ -95,7 +95,7 @@ limitations under the License.
                       this.fire("open-infowindow", {"imgExists":imgExists, "cid":j});
 
                       google.maps.event.addListener(this.markers[j].infowindow,'closeclick',function(){
-                          this.fire("close-infowindow");
+                          this.fire("close-infowindow", {"id": j});
                       }.bind(this));
 
                       break;
@@ -120,7 +120,7 @@ limitations under the License.
                   animation: google.maps.Animation.j,
                   icon: {
                       path: google.maps.SymbolPath.CIRCLE,
-                      scale: 7
+                      scale: 5
                   },
                   title: val.title
               });
@@ -188,6 +188,7 @@ limitations under the License.
           this.markers[id].img=img;
       },
       storeComment2Data: function(id, comment) {
+          console.log(this.markers, id , comment);
           this.markers[id].comment=comment;
       },
       putPositionByData: function(lat, lng) {

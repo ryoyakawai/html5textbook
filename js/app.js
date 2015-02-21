@@ -30,20 +30,31 @@ window.addEventListener('polymer-ready', function(e) {
             });
         }
         document.getElementById("speech-start-"+e.detail.cid).addEventListener('mousedown', function(e) {
+            var t=event.target.id.split("-");
+            var cid=t[t.length-1];
             if(voicerecogcomp.getStatus()==false) {
-                voicerecogcomp.start("speech-comment-"+this.detail.cid);
+                voicerecogcomp.start("speech-comment-"+cid);
             } else {
-                var comment=voicerecogcomp.stop("speech-comment-"+this.detail.cid);
-                gmcomp.storeComment2Data(this.detail.id, comment);  
+                var comment=voicerecogcomp.stop("speech-comment-"+cid);
+                gmcomp.storeComment2Data(cid, comment);  
             }
         }.bind(e));
     });
-    document.addEventListener('close-infowindow', function(e) {
-        document.getElementById("rec-fab").className=document.getElementById("rec-fab").className.replace("disp-rec-fab", "");
-        document.getElementById("rec-fab").cid="";
-        if(videocomp.getStatus==true) videocomp.videoStop();
+
+    // current posistion
+    document.getElementById("currentPos").addEventListener('mousedown', function(e) {
+        geocomp.getLocation(function(event){
+            gmcomp.putPositionByData(event.coords.latitude, event.coords.longitude);
+        });
     });
 
+    // emergency call
+    document.getElementById("emergency").addEventListener('mousedown', function(event) {
+        var emc=document.getElementById("emergencycall");
+        emc.backdrop=true;
+        emc.toggle();
+    });
+    
     // for recognition
     videocomp=document.getElementById("video-comp");
 
@@ -63,12 +74,25 @@ window.addEventListener('polymer-ready', function(e) {
         mission2.toggle();
     });
     mission2.addEventListener("core-overlay-close-completed", function(event){
-        gmcomp.updateMarker("add", "神田明神");
-        gmcomp.updateMarker("add", "湯島天神");
-        gmcomp.updateMarker("add", "秋葉神社");
-        gmcomp.updateMarker("add", "柳森神社");
+        gmcomp.updateMarker("one", "湯島天神");
+    });
+    document.addEventListener('close-infowindow', function(e) {
+        document.getElementById("rec-fab").className=document.getElementById("rec-fab").className.replace("disp-rec-fab", "");
+        document.getElementById("rec-fab").cid="";
+        if(videocomp.getStatus==true) videocomp.videoStop();
+
+        // // // //
+        var id=e.detail.id;
+        if(id==0) {
+            gmcomp.updateMarker("one", "秋葉神社");
+        } else if(id==1) {
+            gmcomp.updateMarker("one", "柳森神社");
+        } else {
+            gmcomp.updateMarker("all", "add");
+        }
     });
 
+    
     // initialize
     mission.toggle();
     window.addEventListener('markers-ready', function(e) {
