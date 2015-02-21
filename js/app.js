@@ -104,7 +104,8 @@ window.addEventListener('polymer-ready', function(e) {
     
 
     // initialize
-    //window.addEventListener('markers-ready', function(e) {
-    //});
+    window.addEventListener('markers-ready', function(e) {
+        
+    });
     
 });
