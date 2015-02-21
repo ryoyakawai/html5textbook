@@ -88,16 +88,16 @@ limitations under the License.
                       var t_content=this.markers[j].description;
                       var display_width = screen.width;
                       var imgExists=false;
-                      img="<div style=\"text-align:center;padding:5px;\"><img class=\"video-canvas\" src=\""+ this.markers[j].img + "\"></div>";
+                      img="<div style=\"text-align:center;padding:5px;\"><img class=\"video-canvas\" width=\""+display_width+"\" src=\""+ this.markers[j].img + "\"></div>";
                       imgExists=true;
-                      alert(display_width);
+                      this.map.panTo(new google.maps.LatLng(this.markers[j].lat,this.markers[j].lng));
+//                      this.updateMarker("all", "add");
                       this.markers[j].infowindow=new google.maps.InfoWindow({
                           content: img + t_content,
                           maxWidth: display_width
                       });
                       this.markers[j].infowindow.open(this.map, this.markers[j].mObj);
                       this.fire("open-infowindow", {"imgExists":imgExists, "cid":j});
-
                       google.maps.event.addListener(this.markers[j].infowindow,'closeclick',function(){
                           this.fire("close-infowindow");
                       }.bind(this));
