@@ -1,6 +1,4 @@
-var gmcomp;
-var videocomp;
-var voicerecogcomp;
+var gmcomp, videocomp, voicerecogcomp, geocomp;
 window.addEventListener('polymer-ready', function(e) {
 
     // for map
@@ -41,11 +39,13 @@ window.addEventListener('polymer-ready', function(e) {
 
 
     // for camera
+/*
     videocomp=document.getElementById("video-comp");
     document.getElementById("video-start").addEventListener("mousedown", function(event){
         videocomp.videoStart();
     });
-
+*/
+    
     document.getElementById("rec-fab").addEventListener("mousedown", function(event){
         console.log("[start recording] ", event.target.cid);
         videocomp.videoStart("userimage");
@@ -81,11 +81,30 @@ window.addEventListener('polymer-ready', function(e) {
         voicerecogcomp.stop();
     });    
 
+    // geolocation
+    geocomp=document.getElementById("geolocation-comp");
+    document.getElementById("geolocation").addEventListener('mousedown', function(e) {
+        geocomp.getLocation(function(position){
+            gmcomp.putPositionByData(position.coords.latitude, position.coords.longitude);
+        });
+    });    
 
-    
-    // initialize
-    window.addEventListener('markers-ready', function(e) {
+
+
+    // main
+    var mission=document.querySelector("#missionstatement");
+    //mission.autoCloseDisabled=true;
+    mission.backdrop=true;
+    document.getElementById("dialog").addEventListener("mousedown", function(event){
+        mission.toggle();
+    });
+    mission.addEventListener("core-overlay-close-completed", function(event){
         gmcomp.updateMarker("all", "add");
     });
+    
+
+    // initialize
+    //window.addEventListener('markers-ready', function(e) {
+    //});
     
 });

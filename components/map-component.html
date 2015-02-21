@@ -105,12 +105,26 @@ limitations under the License.
               }
           }.bind(this));
       },
-      _createMarkerObj: function (val) {
-          return new google.maps.Marker({
-              position: new google.maps.LatLng( val.lat, val.lng ), // Latitude, Longtitude;,
-              animation: google.maps.Animation.DROP,
-              title: val.title
-          });
+      _createMarkerObj: function (val, icon) {
+          var out;
+          if(icon!==true) {
+              out=new google.maps.Marker({
+                  position: new google.maps.LatLng( val.lat, val.lng ), // Latitude, Longtitude;,
+                  animation: google.maps.Animation.DROP,
+                  title: val.title
+              });
+          } else {
+              out=new google.maps.Marker({
+                  position: new google.maps.LatLng( val.lat, val.lng ), // Latitude, Longtitude;,
+                  animation: google.maps.Animation.j,
+                  icon: {
+                      path: google.maps.SymbolPath.CIRCLE,
+                      scale: 7
+                  },
+                  title: val.title
+              });
+          }
+          return out;
       },
       updateMarker: function (type, name) {
           type=type.toLocaleLowerCase();
@@ -156,7 +170,6 @@ limitations under the License.
           }
           this.putAllMarkers();
       },
-      
       putAllMarkers: function() {
           for(var i=0; i<this.markers.length; i++) {
               if(typeof this.markers[i].mObj!="underined"
@@ -172,6 +185,10 @@ limitations under the License.
       },
       storeImg2Data: function(id, img) {
           this.markers[id].img=img;
+      },
+      putPositionByData: function(lat, lng) {
+          var mObj=this._createMarkerObj({"lat": lat, "lng": lng}, true);
+          mObj.setMap(this.map);
       }
   });
   </script>
