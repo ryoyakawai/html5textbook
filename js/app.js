@@ -1,4 +1,5 @@
 var gmcomp, videocomp, voicerecogcomp, geocomp;
+var done=false;
 window.addEventListener('polymer-ready', function(e) {
 
     // for map
@@ -83,14 +84,17 @@ window.addEventListener('polymer-ready', function(e) {
 
         // // // //
         var id=e.detail.id;
-        if(id==0) {
-            gmcomp.updateMarker("one", "湯島天神");
-        } else if(id==1) {
-            gmcomp.updateMarker("one", "秋葉神社");
-        } else if(id==1) {
-            gmcomp.updateMarker("one", "柳森神社");
-        } else {
-            gmcomp.updateMarker("all", "add");
+        if(done==false) {
+            if(id==0) {
+                gmcomp.updateMarker("one", "湯島天神");
+            } else if(id==1) {
+                gmcomp.updateMarker("one", "秋葉神社");
+            } else if(id==2) {
+                gmcomp.updateMarker("one", "柳森神社");
+            } else {
+                gmcomp.updateMarker("all", "add");
+                done=true;
+            }
         }
     });
 
