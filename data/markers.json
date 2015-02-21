@@ -1,5 +1,4 @@
 [
-  { "no":0, "disp":false, "lat":35.667472, "lng":139.766289, "name":"AAA", "title":"hello world 0", "description":"0 lorem ipsumlorem ipsumlorem ipsumlorem ipsum", "mObj": null, "infowondow": null, "img": null },
-  { "no":1, "disp":false, "lat":35.665572, "lng":139.762189, "name":"BBB", "title":"hello world 1", "description":"1 lorem ipsumlorem ipsumlorem ipsumlorem ipsum", "mObj": null, "infowondow": null, "img": null },
-  { "no":2, "disp":false, "lat":35.663372, "lng":139.768444, "name":"CCC", "title":"hello world 2", "description":"2 lorem ipsumlorem ipsumlorem ipsumlorem ipsum", "mObj": null, "infowondow": null, "img": null }
+  { "no":0, "disp":false, "lat":35.701975, "lng":139.767894, "name":"神田明神", "title":"神田明神", "神田明神":"ここでお参りすると何のご利益があるのかな？<br>神主さんに聞いてみよう！！", "mObj": null, "infowondow": null, "img": null },
+  { "no":1, "disp":false, "lat":35.707806, "lng":139.768112, "name":"湯島天神", "title":"湯島天神", "description":"ここでは君たちが持っている鉛筆とは違った鉛筆が売っています。<br>どんな鉛筆が売っているかな？", "mObj": null, "infowondow": null, "img": null }
 ]
