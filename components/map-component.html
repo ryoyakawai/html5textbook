@@ -32,12 +32,12 @@ limitations under the License.
       ],
 */
       ready: function() {
-          this.myLatLng=new google.maps.LatLng( 35.665472, 139.766289 ); // Latitude, Longtitude;
+          this.myLatLng=new google.maps.LatLng( 35.707055, 139.78194 ); // Latitude, Longtitude;
           this.mapCanvas=document.getElementById(this.mapcanvasname);
 
           var mapOptions = {
               center: this.myLatLng,
-              zoom: 16,
+              zoom: 14,
               //mapTypeId: 'satellite'
           };
           this.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
@@ -82,19 +82,20 @@ limitations under the License.
                      && stdNum(this.markers[j].lat, 5)==stdNum(event.latLng.k, 5)) {
                       var t_content=this.markers[j].description;
                       var imgExists=false;
-                      var img="<div style=\"marign:10px;\"><div class=\"no-video\"><canvas id=\"userimage\" class=\"video-canvas\"></canvas></div></div>"
+                      var img="<br><br><button id=\"video-start-"+j+"\" cid=\""+j+"\">Take Picture</button><br><div style=\"marign:10px;\"><div class=\"no-video\" cid=\""+j+"\"><canvas id=\"userimage-"+j+"\" class=\"video-canvas\" cid=\""+j+"\"></canvas></div></div>"
                       if(this.markers[j].img!=null) {
-                          img="<div style=\"text-align:center;padding:5px;\"><img class=\"video-canvas\" src=\""+ this.markers[j].img + "\"></div>";
+                          img="<br><div style=\"text-align:center;padding:5px;\"><img class=\"video-canvas\" src=\""+ this.markers[j].img + "\"></div>";
                           imgExists=true;
                       }
+                      var divtext="<br><button id=\"speech-start-"+j+"\">Rec Comment</button><div id=\"speech-comment-"+j+"\"></div>";
                       this.markers[j].infowindow=new google.maps.InfoWindow({
-                          content: t_content + img
+                          content: t_content + img + divtext
                       });
                       this.markers[j].infowindow.open(this.map, this.markers[j].mObj);
                       this.fire("open-infowindow", {"imgExists":imgExists, "cid":j});
 
                       google.maps.event.addListener(this.markers[j].infowindow,'closeclick',function(){
-                          this.fire("close-infowindow");
+                          this.fire("close-infowindow", {"id": j});
                       }.bind(this));
 
                       break;
@@ -105,12 +106,26 @@ limitations under the License.
               }
           }.bind(this));
       },
-      _createMarkerObj: function (val) {
-          return new google.maps.Marker({
-              position: new google.maps.LatLng( val.lat, val.lng ), // Latitude, Longtitude;,
-              animation: google.maps.Animation.DROP,
-              title: val.title
-          });
+      _createMarkerObj: function (val, icon) {
+          var out;
+          if(icon!==true) {
+              out=new google.maps.Marker({
+                  position: new google.maps.LatLng( val.lat, val.lng ), // Latitude, Longtitude;,
+                  animation: google.maps.Animation.DROP,
+                  title: val.title
+              });
+          } else {
+              out=new google.maps.Marker({
+                  position: new google.maps.LatLng( val.lat, val.lng ), // Latitude, Longtitude;,
+                  animation: google.maps.Animation.j,
+                  icon: {
+                      path: google.maps.SymbolPath.CIRCLE,
+                      scale: 5
+                  },
+                  title: val.title
+              });
+          }
+          return out;
       },
       updateMarker: function (type, name) {
           type=type.toLocaleLowerCase();
@@ -156,7 +171,6 @@ limitations under the License.
           }
           this.putAllMarkers();
       },
-      
       putAllMarkers: function() {
           for(var i=0; i<this.markers.length; i++) {
               if(typeof this.markers[i].mObj!="underined"
@@ -172,7 +186,19 @@ limitations under the License.
       },
       storeImg2Data: function(id, img) {
           this.markers[id].img=img;
+      },
+      storeComment2Data: function(id, comment) {
+          console.log(this.markers, id , comment);
+          this.markers[id].comment=comment;
+      },
+      putPositionByData: function(lat, lng) {
+          var mObj=this._createMarkerObj({"lat": lat, "lng": lng}, true);
+          mObj.setMap(this.map);
+      },
+      panTo: function(lat, lng) {
+          google.maps.panTo(new google.maps.LatLng(35.666397,139.758153));
       }
+      
   });
   </script>
 </polymer-element>

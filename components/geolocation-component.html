@@ -1,0 +1,46 @@
+<!--
+Copyright 2015 Ryoya Kawai. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<polymer-element name="geolocation-component" attributes="">
+  <template></template>
+  <script type="text/javascript">
+  Polymer({
+      geo: null,
+      callback:null,
+      ready: function() {
+          var options={"enableHighAccuracy": true, };
+          if(typeof navigator.geolocation=="undefined") {
+              return false;
+          }
+      },
+      getLocation: function(callback) {
+          this.callback=callback;
+          navigator.geolocation.getCurrentPosition(this.successCallback.bind(this), this.errorCallback.bind(this));
+      },
+      successCallback: function(position) {
+          this.callback(position);
+      },
+      errorCallback: function(msg) {
+          var errorMessage = {
+              0: "原因不明のエラーが発生しました…。",
+              1: "位置情報の取得が許可されませんでした…。",
+              2: "電波状況などで位置情報が取得できませんでした…。",
+              3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました…。",
+          };
+          console.log("[ERROR] ", errorMessage[msg.code]);
+      }
+  });
+  </script>
+</polymer-element>

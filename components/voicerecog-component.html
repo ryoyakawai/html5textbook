@@ -35,7 +35,11 @@ limitations under the License.
               this.supported=true;
           }
       },
+      getStatus: function() {
+          return this.isRecognition;
+      },
       start: function(resultelement) {
+          console.log(resultelement);
           this.result=document.getElementById(resultelement);
           this.result.innerHTML="";
           if(this.supported==false) {
@@ -92,10 +96,11 @@ limitations under the License.
           this.recognition.start();
           this.isRecognition=true;
       },
-      stop: function() {
+      stop: function(resultelement) {
           if(this.isRecognition==true) {
               this.recognition.stop();
               this.isRecognition=false;
+              return document.getElementById(resultelement).innerText;
           } else {
               console.log("Recognition is NOT starting");
           }
