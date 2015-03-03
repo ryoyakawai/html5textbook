@@ -1,0 +1,6 @@
+[
+  { "no":0, "disp":false, "lat":35.701975, "lng":139.767894, "name":"神田明神", "title":"神田明神", "description":"ここでお参りすると何のご利益があるのかな？<br>神主さんに聞いてみよう！！", "mObj": null, "infowondow": null, "img": null, "comment":null },
+  { "no":1, "disp":false, "lat":35.707806, "lng":139.768112, "name":"湯島天神", "title":"湯島天神", "description":"ここでは君たちが持っている鉛筆とは違った鉛筆が売っています。<br>どんな鉛筆が売っているかな？", "mObj": null, "infowondow": null, "img": null, "comment":null },
+  { "no":2, "disp":false, "lat":35.484147643618, "lng":137.07538604736, "name":"秋葉神社", "title":"秋葉神社", "description":"", "mObj": null, "infowondow": null, "img": null, "comment":null },
+  { "no":3, "disp":false, "lat":35.6966836, "lng":139.7740244, "name":"柳森神社", "title":"柳森神社", "description":"", "mObj": null, "infowondow": null, "img": null, "comment":null }
+]
